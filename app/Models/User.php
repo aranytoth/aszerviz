@@ -87,6 +87,11 @@ class User extends Authenticatable
         return $this->hasOne(Garage::class, 'id', 'garage_id');
     }
 
+    public function garageOwner() : HasOne
+    {
+        return $this->hasOne(Garage::class, 'user_id', 'id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

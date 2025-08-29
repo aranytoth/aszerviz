@@ -6,7 +6,8 @@
                 <input type="text" class="form-control" name="WorksheetItem[current][{{$item->id}}][item_num]" value="{{$item->item_num}}" placeholder="Cikkszám">
             </div>
             <div class="col-sm-12  col-md-2">
-                <label class="form-label">Megnevezés</label>
+                <input type="hidden" name="WorksheetItem[current][{{$item->id}}][is_work]" value="0">
+                <label class="form-label">Megnevezés (Munkaóra <input type="checkbox" class="form-check-input" name="WorksheetItem[current][{{$item->id}}][is_work]" {{$item->is_work ? 'checked' : ''}} value="1">)</label>
                 <input type="text" class="form-control" name="WorksheetItem[current][{{$item->id}}][item_name]" value="{{$item->item_name}}" placeholder="Megnevezés">
             </div>
             <div class="col-sm-12  col-md-1">
@@ -40,7 +41,9 @@
                 <div class="item-fullprice"><span>{{number_format($item->quantity * $item->unit_price,0," "," ")}}</span> Ft</div>
             </div>
             <div class="col-sm-12 col-md-1 d-flex align-items-center justify-items-center">
+                 @role('admin|manager')
                 <a href=""><i class="dripicons-trash"></i></a>
+                @endrole
             </div>
         </div>
     </div>

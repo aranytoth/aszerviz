@@ -29,7 +29,19 @@ class Worksheet extends Model
         'note',
         'calc_price',
         'warranty',
-        'old_parts'
+        'old_parts',
+        'history'
+    ];
+
+    protected $casts = [
+        'history' => 'array'
+    ];
+
+    public static $statuses = [
+        1 => 'Nyitott',
+        2 => 'Folyamatban',
+        10 => 'Lezárt',
+        11 => 'Törölve'
     ];
 
     public function client() : HasOne
@@ -57,6 +69,11 @@ class Worksheet extends Model
         return $this->hasOne(Garage::class, 'id', 'garage_id');
     }
 
+    public function mechanic() : HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'mechanic_user_id');
+    }
+
     public function createWorkSheetId()
     {
         $user = Auth::user();
@@ -67,5 +84,10 @@ class Worksheet extends Model
             $worksheetCount = Worksheet::whereYear('created_at', date('Y'))->count();
             $this->worksheet_id = $user->garage->company->prefix.'A-'.date('Y').'-'.$worksheetCount+1;
         }
+    }
+
+    public function getCurrentStatusAttribute()
+    {
+        return self::$statuses[$this->status];
     }
 }

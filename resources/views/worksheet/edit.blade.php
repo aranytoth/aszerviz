@@ -2,6 +2,7 @@
 
 @section('content')
 <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+<link href="{{asset('static/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
     <form action="{{route('worksheet.update', ['worksheet' => $worksheet->id])}}" method="POST" id="worksheet-form" style="margin-bottom: 90px">
         @csrf
         @method('PUT')
@@ -267,16 +268,45 @@
 <div class="footer bg-" style="bottom: 60px; height: 70px; position: fixed;">
     <div class="container-fluid">
         <div class="row justify-content-end">
-            <div class="col-md-6 ">
+           
+            <div class="col-md-4">
                 <input type="submit" class="btn btn-primary float-end" value="Mentés" form="worksheet-form"/>
+                <div class="dropdown float-end me-2">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Lehetőségek <i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#mailModal">Munkalap kiküldése</button>
+                        <a class="dropdown-item worksheet-status" data-status="2" href="#">Munkavégzés</a>
+                        <a class="dropdown-item worksheet-status" data-status="10" href="#">Lezárás</a>
+                        @role('admin|manager')
+                        <a class="dropdown-item worksheet-status" data-status="11" href="#">Törlés</a>
+                        @endrole
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
 </div>
+@include('worksheet._modals', ['worksheet' => $worksheet])
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div class="toast align-items-center bg-success text-light" id="liveToast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      A munkalap státusza megváltozott
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+</div>
+
 @endsection
 
 @section('js')
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<script src="{{asset('static/libs/select2/js/select2.full.min.js')}}"></script>
 <style>
     #images-con img {
         max-width: 200px;
@@ -302,9 +332,25 @@
     #images-con .dz-preview {
         margin-bottom: 20px;
     }
+    .loading-fade {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.3);
+        
+    }
 </style>
 <script type="module">
     $(function(){
+        $.ajaxSetup({
+            headers:
+            { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
         var prevFile;
         $("span#images-con").dropzone({
              url: "{{route('image.upload')}}",
@@ -348,6 +394,39 @@ $('body').on({
     }
 }, '#worksheet-items-container .counter');
 
+$('body').on({
+    'submit': function(e){
+        e.preventDefault();
+        $('#mailModal').find('.loading-fade').css({'display':'flex'});
+        $.post($(this).attr('action'), {email: $(this).find('.modal-body input').val()}, function(response){
+            if(response.success){
+                var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('mailModal'));
+                myModal.hide();
+            }
+            
+        });
+    }
+}, '#mailModal form');
+
+$('body').on({
+    'click': function(e){
+        e.preventDefault();
+        var setStatus = $(this).data('status');
+        $.post("{{route('worksheet.status', ['worksheet' => $worksheet])}}", {status: setStatus}, function(response){
+            if(response.success) {
+                if(setStatus == 11){
+                    location.href = "{{route('worksheet.index')}}";
+                }
+                var myAlert = document.getElementById('liveToast');
+                var bsAlert = new bootstrap.Toast(myAlert);
+                bsAlert.show();
+
+            }
+        });
+        
+    }
+}, '.worksheet-status');
+
 function countPrice(){
     var totalBruttoPrice = 0;
     var totalNettoPrice = 0;
@@ -369,19 +448,19 @@ function addWorksheetItem(){
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col">
+            <div class="col-md-2 col-sm-12">
                 <label class="form-label">Cikkszám</label>
                 <input type="text" class="form-control" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][item_num]" placeholder="Cikkszám">
             </div>
-            <div class="col">
+            <div class="col-md-2 col-sm-12">
                 <label class="form-label">Megnevezés</label>
                 <input type="text" class="form-control" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][item_name]" placeholder="Megnevezés">
             </div>
-            <div class="col">
+            <div class="col-md-1 col-sm-12">
                 <label class="form-label">Mennyiség</label>
-                <input type="text" class="form-control" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][quantity]" placeholder="Mennyiség">
+                <input type="text" class="form-control counter" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][quantity]" placeholder="Mennyiség">
             </div>
-            <div class="col">
+            <div class="col-md-1 col-sm-12">
                 <label class="form-label">Mennyiségi egység</label>
                 <select class="form-select" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][unit]">
                     <option value="1" selected>darab</option>
@@ -390,24 +469,24 @@ function addWorksheetItem(){
                     <option value="4">kg</option>
                 </select>
             </div>
-            <div class="col">
+            <div class="col-md-2 col-sm-12">
                 <label class="form-label">Egységár (nettó)</label>
-                <input type="text" class="form-control" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][unit_price]" placeholder="Egységár (nettó)">
+                <input type="text" class="form-control counter" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][unit_price]" placeholder="Egységár (nettó)">
             </div>
-            <div class="col">
+            <div class="col-md-1 col-sm-12">
                 <label class="form-label">ÁFA</label>
-                <select class="form-select" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][vat]">
+                <select class="form-select counter" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][vat]">
                     <option value="27" selected>27%</option>
                     <option value="5">5%</option>
                     <option value="18">18%</option>
                     <option value="0">AAM</option>
                 </select>
             </div>
-            <div class="col">
+            <div class="col-md-1 col-sm-12">
                 <label class="form-label">Tétel összesen</label>
                 <div class="item-fullprice">0 Ft</div>
             </div>
-            <div class="col">
+            <div class="col-md-2 col-sm-12">
                 <a href=""><i class="dripicons-trash"></i></a>
             </div>
         </div>

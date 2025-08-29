@@ -25,15 +25,22 @@
                         <th>Munka megnevezése</th>
                         <th>Szerelő</th>
                         <th>Állapot</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
+                    @foreach ($model as $key =>$worksheet)
+                        <tr>
+                            <td scope="row">{{$key+1}}</td>
+                            <td>{{$worksheet->worksheet_id}}</td>
+                            <td>{{$worksheet->vehicle->license_plate}} {{$worksheet->vehicle->brand}}</td>
+                            <td>{{$worksheet->name}}</td>
+                            <td>{{$worksheet->mechanic->name}}</td>
+                            <td>{{$worksheet->currentStatus}}</td>
+                            <td><a href="{{route('worksheet.edit', ['worksheet' => $worksheet->id])}}"><span class="dripicons-pencil"></span></a></td>
+                        </tr>
+                    @endforeach
+                    
                    
                 </tbody>
             </table>

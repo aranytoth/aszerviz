@@ -100,15 +100,12 @@
                                         <div class="dz-image"><img src="{{$company->company_logo}}" /></div>
                                     </div>
                                 </div>
+                            @else
+                            <div class="image-click"></div>
                             @endif
                         </div>
                     </div>
-                
                 </div>
-
-                
-                
-                
                 <div>
                     <button class="btn btn-primary" type="submit">Mentés</button>
                 </div>
@@ -126,17 +123,19 @@
         $("div#company_logo").dropzone({
              url: "{{route('image.upload')}}",
              paramName: "image",
-             
              clickable: '.image-click',
              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
              success: function(file, response) {
+                console.log('response');
                 prevFile = file;
                 $(file.previewElement).find('img').attr('src', response.path)
                 $(file.previewElement).find('input').val(response.filename)
              },
              
              sending: function(){
-                this.element.querySelector('.dz-preview').remove();
+                if(this.element.querySelector('.dz-preview')){
+                    this.element.querySelector('.dz-preview').remove();
+                }
              },
              previewTemplate: `<div class="dz-preview dz-file-preview">
                 <div class="dz-details">

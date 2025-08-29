@@ -6,9 +6,9 @@ use App\Http\Controllers\GarageController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorksheetController;
+use App\Models\Worksheet;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [WorksheetController::class, 'index'])->name('worksheet');
 
 Auth::routes();
 
@@ -18,9 +18,13 @@ Route::get('/info', function(){
     phpinfo();
 });
 
+Route::get('/ajanlat/{worksheet}', [WorksheetController::class, 'view'])->name('worksheet.view');
+
 Route::post('image/upload', [ImageController::class, 'upload'])->name('image.upload');
 
 Route::group(['middleware' => ['auth:web']], function(){
+    Route::get('/', [WorksheetController::class, 'index'])->name('worksheet');
+    Route::get('/profil', [UserController::class, 'profil'])->name('user.profil');
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('users/new', [UserController::class, 'create'])->name('users.create');
     Route::post('users/new', [UserController::class, 'store'])->name('users.store');
@@ -34,7 +38,8 @@ Route::group(['middleware' => ['auth:web']], function(){
     Route::put('munkalap/edit/{worksheet}', [WorksheetController::class, 'update'])->name('worksheet.update');
 
     Route::get('munkalap/pdf/{worksheet}', [WorksheetController::class, 'createPDF'])->name('worksheet.pdf');
-
+    Route::post('munkalap/email/{worksheet}', [WorksheetController::class, 'sendOffer'])->name('worksheet.email');
+    Route::post('munkalap/status/{worksheet}', [WorksheetController::class, 'setStatus'])->name('worksheet.status');
 
     Route::get('company', [CompanyController::class, 'index'])->name('company.index');
     Route::get('company/new', [CompanyController::class, 'create'])->name('company.create');

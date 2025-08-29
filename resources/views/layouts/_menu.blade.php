@@ -36,7 +36,7 @@
                             </a>
                         </li>
 
-
+                        @role('admin|manager')
                         <li class="menu-title">Admin</li>
                         <li>
                             <a href="{{route('users.index')}}" class=" waves-effect">
@@ -56,6 +56,7 @@
                                 <span>Garázsok</span>
                             </a>
                         </li>
+                        @endrole
                     </ul>
                 </div>
                 <!-- Sidebar -->

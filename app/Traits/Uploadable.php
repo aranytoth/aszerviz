@@ -19,7 +19,7 @@ trait Uploadable {
         ->width(800)
         ->optimize()
         ->save(storage_path('app/public/'.$this->id.'/company/'. $this->$attributeName));
-
+        Storage::delete(storage_path('app/public/temp/' . $this->$attributeName));
         $this->$attributeName = asset('storage/'.$this->id.'/company/'. $this->$attributeName);
     }
 
@@ -32,7 +32,7 @@ trait Uploadable {
         ->width(800)
         ->optimize()
         ->save(storage_path('app/public/'.date('Y/m/d/'). $this->$attributeName));
-
+        Storage::delete(storage_path('app/public/temp/' . $this->$attributeName));
         $this->$attributeName = asset('storage/'.date('Y/m/d/'). $this->$attributeName);
     }
 }

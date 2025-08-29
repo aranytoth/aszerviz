@@ -73,6 +73,12 @@ class UserController extends Controller
         
     }
 
+    public function profil()
+    {
+        $user = Auth::user();
+        return view('users.profile', compact('user'));
+    }
+
     public function delete()
     {
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Offer;
 use App\Models\Client;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -13,13 +14,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class WorksheetController extends Controller
 {
-    public function index() : View
+    public function index(Request $request) : View
     {
+        $params = $request->all();
         $model = Worksheet::orderBy('created_at', 'DESC')->paginate(20);
-        return view('worksheet.index');
+        return view('worksheet.index', compact('model'));
     }
 
     public function create() : View
@@ -87,24 +92,65 @@ class WorksheetController extends Controller
     public function update(Request $request, Worksheet $worksheet)
     {
         $params = $request->all();
-        $this->handleWorksheetImages($worksheet, $request['WorksheetImage']);
-        $this->handleWorksheetItems($worksheet, $request['WorksheetItem']);
+        $this->handleWorksheetImages($worksheet, $request['WorksheetImage'] ?? []);
+        $this->handleWorksheetItems($worksheet, $request['WorksheetItem'] ?? []);
         //dd(preg_replace('/[^0-9]/', '', $params['WorkSheet']['calc_price']));
         if(!empty($params['WorkSheet']['calc_price'])){
             $params['WorkSheet']['calc_price'] = preg_replace('/[^0-9]/', '', $params['WorkSheet']['calc_price']);
         }
         $worksheet->fill($params['WorkSheet']);
         $worksheet->save();
+
+        $worksheet->client->fill($params['Client']);
+        $worksheet->client->save();
+
+        $worksheet->vehicle->fill($params['Vehicle']);
+        $worksheet->vehicle->save();
         
         // dd($params);
         return redirect()->back();
     }
 
+    public function view(Worksheet $worksheet)
+    {
+        return view('worksheet.view', compact('worksheet'));
+    }
+
     public function createPDF(Worksheet $worksheet)
     {
+        Storage::disk('public')->makeDirectory('/pdf');
+
         $pdf = Pdf::loadView('pdf.worksheet', ['worksheet' => $worksheet]);
         return $pdf->stream('invoice.pdf');
 
+    }
+
+    public function sendOffer(Request $request, Worksheet $worksheet)
+    {
+        $params = $request->all();
+        $email = isset($params['email']) && !empty($params['email']) ? $params['email'] : $worksheet->client->email;
+        $pdf = Pdf::loadView('pdf.worksheet', ['worksheet' => $worksheet]);
+        $pdf->save(Storage::disk('public')->path('pdf/'.$worksheet->worksheet_id.'.pdf'));
+        //Mail::to($worksheet->client->email)->send(new Offer($worksheet));
+        Mail::to($email)->send(new Offer($worksheet));
+        $history = $worksheet->history;
+        $history[] = [Carbon::now()->format('Y-m-d H:i:s') => ['Ajánlat kiküldve', Auth::id()]];
+        $worksheet->history = $history;
+        $worksheet->save();
+        return response()->json(['success' => true], 200);
+    }
+
+    public function setStatus(Request $request, Worksheet $worksheet)
+    {
+        $params = $request->all();
+        if(isset($params['status'])) {
+            $worksheet->status = $params['status'];
+            $history = $worksheet->history;
+            $history[] = [Carbon::now()->format('Y-m-d H:i:s') => ['Státusz megváltozott: '.Worksheet::$statuses[$params['status']], Auth::id()]];
+            $worksheet->history = $history;
+            $worksheet->save();
+            return response()->json(['success' => true], 200);
+        }
     }
 
     private function handleWorksheetImages(Worksheet $worksheet, array $items)
