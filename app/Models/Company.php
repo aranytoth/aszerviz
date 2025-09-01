@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Uploadable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Company extends Model
@@ -62,5 +63,10 @@ class Company extends Model
         $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
         $string = Str::upper(substr($string, 0, 2));
         return $string;
+    }
+
+    public function garages() : HasMany
+    {
+        return $this->hasMany(Garage::class, 'company_id', 'id');
     }
 }

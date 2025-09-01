@@ -82,7 +82,7 @@ class Worksheet extends Model
             $this->worksheet_id = $user->garage->company->prefix.'-'.date('Y').'-'.$worksheetCount+1;
         } elseif(!empty($user->company)){
             $worksheetCount = Worksheet::whereYear('created_at', date('Y'))->count();
-            $this->worksheet_id = $user->garage->company->prefix.'A-'.date('Y').'-'.$worksheetCount+1;
+            $this->worksheet_id = $user->company->prefix.'A-'.date('Y').'-'.$worksheetCount+1;
         }
     }
 

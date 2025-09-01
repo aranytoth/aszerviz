@@ -1,0 +1,13 @@
+{
+    "name": "szamlazzhu/szamlazz",
+    "description": "szamlazz.hu csomag",
+    "type": "library",
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SzamlaAgent\\": "src/"
+        }
+    }
+}

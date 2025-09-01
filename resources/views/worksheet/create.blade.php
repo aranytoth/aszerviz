@@ -32,7 +32,7 @@
                         <div class="col-md-4">
                             <div class="mb-1">
                                 <label class="form-label">Tervezett szerelő</label>
-                                <select name="WorkSheet[mechanic_user_id]" class="form-control">
+                                <select name="WorkSheet[mechanic_user_id]" class="form-select">
                                     @foreach ($mechanics as $mechanic)
                                         <option value="{{$mechanic->id}}">{{$mechanic->name}}</option>
                                     @endforeach
@@ -139,7 +139,7 @@
                             <div class="col-md-6">
                                 <div class="mb-1">
                                     <label class="form-label">Ügyfél telefonszám</label>
-                                    <input type="text" class="form-control" name="Client[phone]" placeholder="Ügyfél neve" value="{{old('phone')}}">
+                                    <input type="text" class="form-control" name="Client[phone]" placeholder="Ügyfél telefonszám" value="{{old('phone')}}">
                                 </div>
                             </div>
                         </div>
@@ -147,13 +147,13 @@
                             <div class="col-md-6">
                                 <div class="mb-1">
                                     <label class="form-label">Cég neve (cég esetén)</label>
-                                    <input type="text" class="form-control" name="Client[company_name]" placeholder="Ügyfél email címe" value="{{old('company_name')}}">
+                                    <input type="text" class="form-control" name="Client[company_name]" placeholder="Cég neve" value="{{old('company_name')}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-1">
                                     <label class="form-label">Cég adószáma</label>
-                                    <input type="text" class="form-control" name="Client[company_vat]" placeholder="Ügyfél email címe" value="{{old('company_vat')}}">
+                                    <input type="text" class="form-control" name="Client[company_vat]" placeholder="Cég adószáma" value="{{old('company_vat')}}">
                                 </div>
                             </div>
                         </div>

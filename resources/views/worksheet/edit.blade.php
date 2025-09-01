@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="row align-items-center mb-1">
                             <div class="col-md-6">
-                                <h4 class="mb-4">Munkalap szerkesztése</h4>
+                                <h4 class="mb-4">{{$worksheet->name}} - {{$worksheet->vehicle->license_plate}}</h4>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -227,6 +227,20 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
+                            <label class="col-sm-6 col-form-label">Garanciát vállalunk:</label>
+                            <div class="col-md-2">
+                                <input type="hidden" name="WorkSheet[warranty]" value="0">
+                                <input type="checkbox" name="WorkSheet[warranty]" id="switch1" value="1" switch="none" {{$worksheet->warranty ? 'checked' : ''}} />
+                                <label for="switch1" ></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-6 col-form-label">Lecserélt alkatrészekrő lemond:</label>
+                            <div class="col-md-2">
+                                <input type="hidden" name="WorkSheet[old_parts]" value="0">
+                                <input type="checkbox" name="WorkSheet[old_parts]" id="switch2" switch="none" value="1" {{$worksheet->old_parts ? 'checked' : ''}} />
+                                <label for="switch2" ></label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -276,7 +290,7 @@
                         Lehetőségek <i class="mdi mdi-chevron-down"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#mailModal">Munkalap kiküldése</button>
+                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#mailModal">Munkalap kiküldése emailben</button>
                         <a class="dropdown-item worksheet-status" data-status="2" href="#">Munkavégzés</a>
                         <a class="dropdown-item worksheet-status" data-status="10" href="#">Lezárás</a>
                         @role('admin|manager')
@@ -308,42 +322,7 @@
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 <script src="{{asset('static/libs/select2/js/select2.full.min.js')}}"></script>
 <style>
-    #images-con img {
-        max-width: 200px;
-        height: auto;
-    }
-    #images-con .dz-details {
-        display: flex;
-        gap: 20px;
-    }
-    .add-image-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100px;
-        height: 100px;
-        background-color: #ddd;
-        float: right;
-        cursor: pointer;
-    }
-    .add-image-btn i {
-        font-size: 30px;
-    }
-    #images-con .dz-preview {
-        margin-bottom: 20px;
-    }
-    .loading-fade {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        background-color: rgba(0, 0, 0, 0.3);
-        
-    }
+    
 </style>
 <script type="module">
     $(function(){
@@ -431,14 +410,17 @@ function countPrice(){
     var totalBruttoPrice = 0;
     var totalNettoPrice = 0;
     $('#worksheet-items-container .card').each(function(){
-        var nettoPrice = $(this).find('.quantity-price').val() * $(this).find('.unit-price').val();
-        var bruttoPrice = Math.round(nettoPrice + (nettoPrice / 100 * $(this).find('.vat-price').val()));
-        $(this).find('.item-fullprice span').html(number_format(nettoPrice));
-        totalBruttoPrice += bruttoPrice;
-        totalNettoPrice += nettoPrice;
-        $('.total-netto-price span').html(number_format(totalNettoPrice));
-        $('.total-vat-price span').html(number_format(totalBruttoPrice - totalNettoPrice));
-        $('.total-brutto-price span').html(number_format(totalBruttoPrice));
+        console.log($(this).find('.quantity-price').val(),$(this).find('.unit-price').val() )
+        if($(this).find('.quantity-price').val() !== undefined && $(this).find('.unit-price').val() !== undefined){
+            var nettoPrice = $(this).find('.quantity-price').val() * $(this).find('.unit-price').val();
+            var bruttoPrice = Math.round(nettoPrice + (nettoPrice / 100 * $(this).find('.vat-price').val()));
+            $(this).find('.item-fullprice span').html(number_format(nettoPrice));
+            totalBruttoPrice += bruttoPrice;
+            totalNettoPrice += nettoPrice;
+            $('.total-netto-price span').html(number_format(totalNettoPrice));
+            $('.total-vat-price span').html(number_format(totalBruttoPrice - totalNettoPrice));
+            $('.total-brutto-price span').html(number_format(totalBruttoPrice));
+        }
     });
     
 }
@@ -458,10 +440,10 @@ function addWorksheetItem(){
             </div>
             <div class="col-md-1 col-sm-12">
                 <label class="form-label">Mennyiség</label>
-                <input type="text" class="form-control counter" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][quantity]" placeholder="Mennyiség">
+                <input type="text" class="form-control counter quantity-price" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][quantity]" placeholder="Mennyiség">
             </div>
             <div class="col-md-1 col-sm-12">
-                <label class="form-label">Mennyiségi egység</label>
+                <label class="form-label">Egység</label>
                 <select class="form-select" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][unit]">
                     <option value="1" selected>darab</option>
                     <option value="2">óra</option>
@@ -471,23 +453,23 @@ function addWorksheetItem(){
             </div>
             <div class="col-md-2 col-sm-12">
                 <label class="form-label">Egységár (nettó)</label>
-                <input type="text" class="form-control counter" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][unit_price]" placeholder="Egységár (nettó)">
+                <input type="text" class="form-control counter unit-price" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][unit_price]" placeholder="Egységár (nettó)">
             </div>
             <div class="col-md-1 col-sm-12">
                 <label class="form-label">ÁFA</label>
-                <select class="form-select counter" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][vat]">
+                <select class="form-select counter vat-price" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][vat]">
                     <option value="27" selected>27%</option>
                     <option value="5">5%</option>
                     <option value="18">18%</option>
                     <option value="0">AAM</option>
                 </select>
             </div>
-            <div class="col-md-1 col-sm-12">
-                <label class="form-label">Tétel összesen</label>
-                <div class="item-fullprice">0 Ft</div>
-            </div>
             <div class="col-md-2 col-sm-12">
-                <a href=""><i class="dripicons-trash"></i></a>
+                <label class="form-label">Tétel összesen</label>
+                <div class="item-fullprice"><span>0</span> Ft</div>
+            </div>
+            <div class="col-md-1 col-sm-12">
+                <a href="" class="item-to-trash"><i class="dripicons-trash"></i></a>
             </div>
         </div>
     </div>
@@ -500,7 +482,14 @@ $('body').on({
         e.preventDefault();
         $('#worksheet-items-container').append(addWorksheetItem());
     }
-}, '#new-worksheet-item')
+}, '#new-worksheet-item');
+
+$('body').on({
+    click: function(e){
+        e.preventDefault();
+        $(this).closest('.card').remove();
+    }
+}, '.item-to-trash')
 
 </script>
 @endsection

@@ -17,14 +17,23 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Database\Query\Builder;
 
 class WorksheetController extends Controller
 {
     public function index(Request $request) : View
     {
         $params = $request->all();
-        $model = Worksheet::orderBy('created_at', 'DESC')->paginate(20);
-        return view('worksheet.index', compact('model'));
+        $statuses = Worksheet::$statuses;
+        $users = User::role('mechanic')->get();
+        $model = Worksheet::orderBy('created_at', 'DESC')
+        ->when(isset($params['worksheet']), function($query) use ($params){
+            $query->where('worksheet.name', 'like', '%'.$params['worksheet'].'%');
+        });
+        
+        $model = $model->paginate(20);
+        return view('worksheet.index', compact('model', 'statuses', 'users', 'params'));
     }
 
     public function create() : View
@@ -58,6 +67,7 @@ class WorksheetController extends Controller
         if(!isset($params['Vehicle']['id'])){
             $vehicle = new Vehicle();
             $vehicle->fill($params['Vehicle']);
+            $vehicle->license_plate = Str::upper($vehicle->license_plate);
             if($vehicle->save()) {
                 
             } else {
@@ -70,7 +80,7 @@ class WorksheetController extends Controller
         // Munkalap létrehozása
         $worksheet = new Worksheet();
         $worksheet->fill($params['WorkSheet']);
-        $worksheet->garage_id = Auth::user()->garage_id;
+        $worksheet->garage_id = isset(Auth::user()->garage_id) ? Auth::user()->garage_id : Auth::user()->company->garages[0]->id;
         $worksheet->client_id = $client->id;
         $worksheet->vehicle_id = $vehicle->id;
         $worksheet->station_id = 1; // ha kell szerelőállás, beüzemeljük
@@ -182,6 +192,9 @@ class WorksheetController extends Controller
         foreach($worksheet->items as $item){
             if(isset($items['current'][$item->id])){
                 $item->fill($items['current'][$item->id]);
+                if(empty($item->item_num)){
+                    $item->item_num = '--';
+                }
                 $item->save();
             } else {
                 $item->delete();
@@ -195,6 +208,9 @@ class WorksheetController extends Controller
                 $wsItem = new WorksheetItem();
                 $wsItem->worksheet_id = $worksheet->id;
                 $wsItem->fill($item);
+                if(empty($wsItem->item_num)){
+                    $wsItem->item_num = '--';
+                }
                 $wsItem->quantity = str_replace(',', '.', $wsItem->quantity);
             
                 $wsItem->save();

@@ -42,7 +42,7 @@
             </div>
             <div class="col-sm-12 col-md-1 d-flex align-items-center justify-items-center">
                  @role('admin|manager')
-                <a href=""><i class="dripicons-trash"></i></a>
+                <a href="" class="item-to-trash"><i class="dripicons-trash"></i></a>
                 @endrole
             </div>
         </div>

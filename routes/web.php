@@ -1,16 +1,18 @@
 <?php
 
+use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GarageController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehiclesController;
 use App\Http\Controllers\WorksheetController;
 use App\Models\Worksheet;
 use Illuminate\Support\Facades\Route;
 
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -52,6 +54,12 @@ Route::group(['middleware' => ['auth:web']], function(){
     Route::post('garage/new', [GarageController::class, 'store'])->name('garage.store');
     Route::get('garage/edit/{garage}', [GarageController::class, 'edit'])->name('garage.edit');
     Route::put('garage/edit/{garage}', [GarageController::class, 'update'])->name('garage.update');
+
+    Route::get('ugyfelek', [ClientsController::class, 'index'])->name('client.index');
+    Route::get('ugyfelek/{client}', [ClientsController::class, 'view'])->name('client.view');
+
+    Route::get('gepjarmuvek', [VehiclesController::class, 'index'])->name('vehicle.index');
+    Route::get('gepjarmuvek/{vehicle}', [VehiclesController::class, 'view'])->name('vehicle.view');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 });

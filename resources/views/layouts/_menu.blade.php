@@ -23,14 +23,14 @@
                         </li>
 
                         <li>
-                            <a href="calendar.html" class=" waves-effect">
+                            <a href="{{route('client.index')}}" class="waves-effect">
                                 <i class="dripicons-user-group"></i>
                                 <span>Úgyfelek</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="calendar.html" class=" waves-effect">
+                            <a href="{{route('vehicle.index')}}" class=" waves-effect">
                                 <i class="dripicons-rocket"></i>
                                 <span>Gépjárművek</span>
                             </a>

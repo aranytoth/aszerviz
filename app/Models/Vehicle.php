@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Vehicle extends Model
 {
@@ -21,4 +22,14 @@ class Vehicle extends Model
         'engine_code',
         'note'
     ];
+
+    public function worksheets() : HasMany
+    {
+        return $this->hasMany(Worksheet::class, 'vehicle_id', 'id')->orderBy('created_at', 'DESC');
+    }
+
+    public function latestSheet()
+    {
+        return $this->hasOne(Worksheet::class, 'vehicle_id', 'id')->orderBy('created_at', 'DESC');
+    }
 }
