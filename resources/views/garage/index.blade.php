@@ -32,7 +32,7 @@
                         <th scope="row">{{$key+1}}</th>
                         <td>{{$garage->name}}</td>
                         <td>{{$garage->zip}} {{$garage->city}}, {{$garage->address}} {{$garage->housenum}}</td>
-                        <td>{{$garage->user->name}}</td>
+                        <td></td>
                         <td>{{$garage->currentStatus}}</td>
                         <td><a href="{{route('garage.edit', ['garage' => $garage->id])}}"><span class="dripicons-pencil"></span></a></td>
                     </tr>

@@ -29,7 +29,10 @@ class UserController extends Controller
     public function create()
     {
         $roles = User::$roles;
-        $garages = Garage::where('company_id', Auth::user()->company->id)->get();
+        $garages = Garage::when(isset(Auth::user()->company->id), function($query){
+            $query->where('company_id', Auth::user()->company->id);
+        })->get();
+
 
         return view('users.create', compact('roles', 'garages'));
     }

@@ -90,4 +90,22 @@ class Worksheet extends Model
     {
         return self::$statuses[$this->status];
     }
+
+    public function getTotalNettoAttribute()
+    {
+        $totalNetto = 0;
+        foreach($this->items as $item){
+            $totalNetto += ($item->unit_price * $item->quantity);
+        }
+        return $totalNetto;
+    }
+
+    public function getTotalVatAttribute()
+    {
+        $totalVat = 0;
+        foreach($this->items as $item){
+            $totalVat += ($item->unit_price/100 * $item->vat * $item->quantity);
+        }
+        return $totalVat;
+    }
 }

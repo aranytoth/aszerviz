@@ -7,8 +7,13 @@
             </div>
             <div class="col-sm-12  col-md-2">
                 <input type="hidden" name="WorksheetItem[current][{{$item->id}}][is_work]" value="0">
-                <label class="form-label">Megnevezés (Munkaóra <input type="checkbox" class="form-check-input" name="WorksheetItem[current][{{$item->id}}][is_work]" {{$item->is_work ? 'checked' : ''}} value="1">)</label>
+                <label class="form-label">Megnevezés (Munkaóra <input type="checkbox" class="form-check-input is-work-checkbox" name="WorksheetItem[current][{{$item->id}}][is_work]" {{$item->is_work ? 'checked' : ''}} value="1">)</label>
                 <input type="text" class="form-control" name="WorksheetItem[current][{{$item->id}}][item_name]" value="{{$item->item_name}}" placeholder="Megnevezés">
+                <select class="form-select worker-selector mt-2" style="{{$item->is_work ? 'display: inline-block' : 'display: none'}}" name="WorksheetItem[current][{{$item->id}}][worker_user_id]">
+                    @foreach ($mechanics as $mechanic)
+                        <option value="{{$mechanic->id}}" {{$mechanic->id == $item->worker_user_id ? 'selected' : ''}}>{{$mechanic->name}}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-sm-12  col-md-1">
                 <label class="form-label">Mennyiség</label>

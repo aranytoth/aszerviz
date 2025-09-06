@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class WorksheetItem extends Model
 {
@@ -27,11 +28,17 @@ class WorksheetItem extends Model
         'unit_price',
         'discount',
         'vat',
-        'is_work'
+        'is_work',
+        'worker_user_id'
     ];
 
     public function getUnitNameAttribute()
     {
         return $this->units[$this->unit];
+    }
+
+    public function user() : HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'worker_user_id');
     }
 }

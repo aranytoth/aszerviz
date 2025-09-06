@@ -89,15 +89,17 @@
             </tr>
         @endforeach
     </table>
+    
     <div id="items-total">
-        <div class="items-unit"><span class="total-name">Nettó számlaérték:</span><span class="total-value">640 000 Ft</span></div>
-        <div class="items-unit"><span class="total-name">Áfa:</span><span class="total-value">640 0 Ft</span></div>
-        <div class="items-unit"><span class="total-name">Bruttó számlaérték:</span><span class="total-value">640 000 Ft</span></div>
+        <div class="items-unit"><span class="total-name">Nettó számlaérték:</span><span class="total-value">{{number_format($worksheet->totalNetto, 0, ' ', ' ')}} Ft</span></div>
+        <div class="items-unit"><span class="total-name">Áfa:</span><span class="total-value">{{number_format($worksheet->totalVat, 0, ' ', ' ')}} Ft</span></div>
+        <div class="items-unit"><span class="total-name">Bruttó számlaérték:</span><span class="total-value">{{number_format(($worksheet->totalNetto + $worksheet->totalVat), 0, ' ', ' ')}} Ft</span></div>
     </div>
     <div id="worksheet-other">
-        <div>[x] A szerviz a munkáért garanciát vállal</div>
-        <div>[ ] A lecserélt alkatrészek tulajdonjogáról a szolgáltató részére lemondok</div>
+        <div>[{{$worksheet->warranty ? 'X' : ' '}}] A szerviz a munkáért garanciát vállal</div>
+        <div>[{{$worksheet->old_parts ? 'X' : ' '}}] A lecserélt alkatrészek tulajdonjogáról a szolgáltató részére lemondok</div>
         <div> A szerviz általános szerződési feltételeit és adatkezelési tájékoztatóját megismertem, azokat elfogadom.</div>
+        <div>A gépjármű műszaki állapotából adódó károkért felelősséget nem vállalunk</div>
         <div>[ ] Hozzájárulok, hogy a szerviz, mint adatkezelő a személyes adataimat marketing célokra kezelje, részemre akcióiról, szolgáltatásairól, tájékoztatókat és ajánlatokat küldjön.</div>
     </div>
     <div class="worksheet-signals">

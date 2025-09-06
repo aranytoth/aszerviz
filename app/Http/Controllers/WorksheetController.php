@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\JsonResponse;
 
 class WorksheetController extends Controller
 {
@@ -104,10 +105,7 @@ class WorksheetController extends Controller
         $params = $request->all();
         $this->handleWorksheetImages($worksheet, $request['WorksheetImage'] ?? []);
         $this->handleWorksheetItems($worksheet, $request['WorksheetItem'] ?? []);
-        //dd(preg_replace('/[^0-9]/', '', $params['WorkSheet']['calc_price']));
-        if(!empty($params['WorkSheet']['calc_price'])){
-            $params['WorkSheet']['calc_price'] = preg_replace('/[^0-9]/', '', $params['WorkSheet']['calc_price']);
-        }
+        //dd(preg_replace('/[^0-9]/', '', $params['WorkSheet']['calc_price'])); 
         $worksheet->fill($params['WorkSheet']);
         $worksheet->save();
 
@@ -135,7 +133,7 @@ class WorksheetController extends Controller
 
     }
 
-    public function sendOffer(Request $request, Worksheet $worksheet)
+    public function sendOffer(Request $request, Worksheet $worksheet) : JsonResponse
     {
         $params = $request->all();
         $email = isset($params['email']) && !empty($params['email']) ? $params['email'] : $worksheet->client->email;
@@ -150,7 +148,7 @@ class WorksheetController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function setStatus(Request $request, Worksheet $worksheet)
+    public function setStatus(Request $request, Worksheet $worksheet) : JsonResponse
     {
         $params = $request->all();
         if(isset($params['status'])) {
@@ -160,7 +158,14 @@ class WorksheetController extends Controller
             $worksheet->history = $history;
             $worksheet->save();
             return response()->json(['success' => true], 200);
+        } else {
+            return response()->json(['success' => false], 400);
         }
+    }
+
+    public function createInvoice(Worksheet $worksheet)
+    {
+
     }
 
     private function handleWorksheetImages(Worksheet $worksheet, array $items)
@@ -194,6 +199,9 @@ class WorksheetController extends Controller
                 $item->fill($items['current'][$item->id]);
                 if(empty($item->item_num)){
                     $item->item_num = '--';
+                }
+                if(!$item->is_work){
+                    $item->worker_user_id = null;
                 }
                 $item->save();
             } else {

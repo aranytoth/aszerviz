@@ -29,7 +29,7 @@
                         <td scope="row">{{$key+1}}</td>
                         <td>{{$vehicle->license_plate}}</td>
                         <td>{{$vehicle->brand}}</td>
-                        <td>{{$vehicle->latestSheet->client->name}}</td>
+                        <td>{{''}}</td>
                         <td>{{$vehicle->created_at}}</td>
                         <td><a href="{{route('vehicle.view', ['vehicle' => $vehicle->id])}}"><span class="dripicons-preview"></span></a></td>
                     </tr>
