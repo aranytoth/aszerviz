@@ -9,7 +9,6 @@ use App\Models\Vehicle;
 use App\Models\Worksheet;
 use App\Models\WorksheetImage;
 use App\Models\WorksheetItem;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -18,7 +17,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 
 class WorksheetController extends Controller
@@ -130,7 +128,14 @@ class WorksheetController extends Controller
 
         $pdf = Pdf::loadView('pdf.worksheet', ['worksheet' => $worksheet]);
         return $pdf->stream('invoice.pdf');
+    }
 
+    public function createWarranty(Worksheet $worksheet)
+    {
+        Storage::disk('public')->makeDirectory('/pdf');
+
+        $pdf = Pdf::loadView('pdf.warranty', ['worksheet' => $worksheet]);
+        return $pdf->stream('warranty.pdf');
     }
 
     public function sendOffer(Request $request, Worksheet $worksheet) : JsonResponse
@@ -184,6 +189,7 @@ class WorksheetController extends Controller
                 $newItem->worksheet_id = $worksheet->id;
                 $newItem->note = $items['new']['note'][$key];
                 $newItem->image = $image;
+                $newItem->has_video = $items['new']['has_video'][$key];
                 $newItem->storeWorksheetImage();
                 $newItem->save();
             }

@@ -26,6 +26,7 @@
     </style>
 </head>
 <body>
+    
     <div id="heading">
         <div>
             <img src="{{$worksheet->garage->company->company_logo}}" width="80"/>

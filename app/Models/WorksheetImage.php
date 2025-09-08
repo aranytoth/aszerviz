@@ -15,6 +15,7 @@ class WorksheetImage extends Model
     protected $fillable = [
         'worksheet_id',
         'image',
+        'has_video',
         'note'
     ];
 

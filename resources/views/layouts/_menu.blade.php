@@ -25,7 +25,7 @@
                         <li>
                             <a href="{{route('client.index')}}" class="waves-effect">
                                 <i class="dripicons-user-group"></i>
-                                <span>Úgyfelek</span>
+                                <span>Ügyfelek</span>
                             </a>
                         </li>
 

@@ -40,12 +40,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-1">
-                                <div class="mb-1">
-                                    <label class="form-label">Becsült javítási költség</label>
-                                    <input type="text" class="form-control" id="calc_price" name="WorkSheet[calc_price]" placeholder="Várható költség (bruttó)" value="{{old('calc_price')}}">
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -107,6 +102,38 @@
                                 <div class="mb-1">
                                     <label class="form-label">Motorkód</label>
                                     <input type="text" class="form-control" name="Vehicle[engine_code]" placeholder="Motorkód" value="{{old('engine_code')}}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-1">
+                                    <label class="form-label">Kilowatt</label>
+                                    <input type="text" class="form-control" name="Vehicle[kilowatt]" placeholder="Motorkód" value="{{old('kilowatt')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb1">
+                                    <label class="form-label">Gépjármű típusa</label>
+                                    <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
+                                        <input type="radio" class="btn-check" name="Vehicle[type]" value="1" id="typeoption1" autocomplete="off" checked>
+                                        <label class="btn btn-primary" for="typeoption1"><i class="mdi mdi-car me-1"></i> SZGK</label>
+                                        
+                                        <input type="radio" class="btn-check" name="Vehicle[type]" value="2" id="typeoption2" autocomplete="off" >
+                                        <label class="btn btn-primary" for="typeoption2"><i class="mdi mdi-truck me-1"></i> TGK</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb1">
+                                    <label class="form-label">Üzemanyag típusa</label>
+                                    <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
+                                        <input type="radio" class="btn-check" name="Vehicle[fuel_type]" value="1" id="fuel_typeoption1" autocomplete="off" checked>
+                                        <label class="btn btn-info" for="fuel_typeoption1">Benzin</label>
+                                        
+                                        <input type="radio" class="btn-check" name="Vehicle[fuel_type]" value="2" id="fuel_typeoption2" autocomplete="off">
+                                        <label class="btn btn-info" for="fuel_typeoption2">Dízel</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

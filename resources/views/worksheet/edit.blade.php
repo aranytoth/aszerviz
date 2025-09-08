@@ -292,6 +292,7 @@
                     <div class="card-header">Képek</div>
                     <div class="card-body">
                         <span id="images-con">
+                            <div class="images-previews"></div>
                             @foreach ($worksheet->images as $item)
                                 @include('worksheet._worksheet_image', ['item' => $item])
                             @endforeach
@@ -317,14 +318,19 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#mailModal">Munkalap kiküldése emailben</button>
+                        @if ($vehicle->type == 1)
+                        <a href="{{asset('static/docs/allapot-gepjarmu.pdf')}}" class="dropdown-item" target="_blank">Állapotfelmérő lap (szgk)</a>
+                        @else
+                        <a href="{{asset('static/docs/allapot-haszon.pdf')}}" class="dropdown-item" target="_blank">Állapotfelmérő lap (tgk)</a>
+                        @endif
                         <a class="dropdown-item worksheet-status" data-status="2" href="#">Munkavégzés</a>
                         <a class="dropdown-item worksheet-status" data-status="10" href="#">Lezárás</a>
+                        <a class="dropdown-item" href="{{route('worksheet.warranty', ['worksheet' => $worksheet])}}" target="_blank">Garanciajegy</a>
                         @role('admin|manager')
                         <a class="dropdown-item worksheet-status" data-status="11" href="#">Törlés</a>
                         @endrole
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -361,24 +367,36 @@
         $("span#images-con").dropzone({
              url: "{{route('image.upload')}}",
              paramName: "image",
+             previewsContainer: ".images-previews",
              clickable: '.add-image-btn',
              acceptedFiles: 'image/*,audio/*,video/*',
              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
              success: function(file, response) {
                 prevFile = file;
-                $(file.previewElement).find('img').attr('src', response.path)
-                $(file.previewElement).find('input.imagename-input').val(response.filename)
+                $(file.previewElement).find('img').attr('src', response.path);
+                $(file.previewElement).find('.dz-progress').hide();
+                $(file.previewElement).find('input.imagename-input').val(response.filename);
+                $(file.previewElement).find('input.imagehasvideo-input').val(response.video);
+
              },
-             
+             uploadprogress: function(file, progress, bytesSent){
+                console.log(progress);
+             },
              sending: function(){
                //this.element.querySelector('.dz-preview').remove();
              },
              previewTemplate: `<div class="dz-preview dz-file-preview">
                 <div class="dz-details">
                     <div class="dz-image"><img data-dz-thumbnail /></div>
+                    <div class="dz-progress">
+                        <div class="spinner-border text-primary m-1" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div></div>
                     <textarea class="form-control" name="WorksheetImage[new][note][]" placeholder="Megjegyzés"></textarea>
                 </div>
+                <input type="hidden" name="WorksheetImage[new][has_video][]" class="imagehasvideo-input" value="">
                 <input type="hidden" name="WorksheetImage[new][image][]" class="imagename-input" value=""><hr />
+                
              </div>`
         });
     });
@@ -429,7 +447,6 @@ $('body').on({
 $('body').on({
     'change':function(e){
     if($(this).is(':checked')){
-        console.log($(this).parent().parent());
         $(this).parent().parent().find('select').show();
     } else {
         $(this).parent().parent().find('select').hide();
@@ -441,7 +458,6 @@ function countPrice(){
     var totalBruttoPrice = 0;
     var totalNettoPrice = 0;
     $('#worksheet-items-container .card').each(function(){
-        console.log($(this).find('.quantity-price').val(),$(this).find('.unit-price').val() )
         if($(this).find('.quantity-price').val() !== undefined && $(this).find('.unit-price').val() !== undefined){
             var nettoPrice = $(this).find('.quantity-price').val() * $(this).find('.unit-price').val();
             var bruttoPrice = Math.round(nettoPrice + (nettoPrice / 100 * $(this).find('.vat-price').val()));

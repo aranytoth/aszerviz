@@ -49,7 +49,7 @@
                     </div>
                     <div class="row mb-0">
                         <div class="col-12 text-end">
-                            <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Jelszóemlékezető kérése</button>
+                            <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Jelszó beállítása</button>
                         </div>
                     </div>
                 </form>
