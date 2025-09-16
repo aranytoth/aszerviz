@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Jobs\OptimizeVideo;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Enums\ImageDriver;
 use Spatie\Image\Image;
@@ -14,6 +15,7 @@ trait Uploadable {
     {
         $attributeName = $this->uploadImageName;
         Storage::disk('public')->makeDirectory($this->id.'/company/');
+        
         Image::useImageDriver(ImageDriver::Gd)
         ->loadFile(storage_path('app/public/temp/' . $this->$attributeName))
         ->width(1280)
@@ -27,11 +29,12 @@ trait Uploadable {
     {
         $attributeName = $this->uploadImageName;
         Storage::disk('public')->makeDirectory(date('Y/m/d'));
+        chmod(Storage::disk('public')->path(date('Y/m/d')), 0777);
          if($this->has_video == 'true'){
             $this->$attributeName = str_replace('.mp4', '.jpg', $this->$attributeName);
-            $videoOutputPath = str_replace('.jpg', '_optimized.mp4', $this->$attributeName);
+            $videoOutputPath = str_replace('.jpg', '.mp4', $this->$attributeName);
             Storage::disk('public')->move('temp/' . $videoOutputPath, date('Y/m/d/'). $videoOutputPath);
-            
+            OptimizeVideo::dispatch(Storage::disk('public')->path(date('Y/m/d/'). $videoOutputPath));
         }
 
         Image::useImageDriver(ImageDriver::Gd)

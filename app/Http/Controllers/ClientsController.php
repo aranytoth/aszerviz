@@ -19,4 +19,21 @@ class ClientsController extends Controller
     {
         return view('client.view', compact('client'));
     }
+
+    public function search(Request $request)
+    {
+        $params = $request->all();
+        if($params['term']){
+            $model = Client::where('name', 'like', '%'.$params['term'].'%')->orWhere('email', 'like', '%'.$params['term'].'%')->get();
+            
+            foreach($model as $key => $client){
+                $model[$key]->text = $client->name;
+            }
+            $response = [
+                'results' => $model
+            ];
+
+            return response()->json($response);
+        }
+    }
 }

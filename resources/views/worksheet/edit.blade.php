@@ -324,7 +324,12 @@
                         <a href="{{asset('static/docs/allapot-haszon.pdf')}}" class="dropdown-item" target="_blank">Állapotfelmérő lap (tgk)</a>
                         @endif
                         <a class="dropdown-item worksheet-status" data-status="2" href="#">Munkavégzés</a>
+                        @if (!$worksheet->is_closed)
                         <a class="dropdown-item worksheet-status" data-status="10" href="#">Lezárás</a>
+                        @else
+                        <button type="button" class="dropdown-item">Számla kiállítása</button>  
+                        @endif
+                        
                         <a class="dropdown-item" href="{{route('worksheet.warranty', ['worksheet' => $worksheet])}}" target="_blank">Garanciajegy</a>
                         @role('admin|manager')
                         <a class="dropdown-item worksheet-status" data-status="11" href="#">Törlés</a>
@@ -353,7 +358,7 @@
 @section('js')
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 <script src="{{asset('static/libs/select2/js/select2.full.min.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <style>
     
 </style>
@@ -482,8 +487,14 @@ function addWorksheetItem(){
                 <input type="text" class="form-control" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][item_num]" placeholder="Cikkszám">
             </div>
             <div class="col-md-2 col-sm-12">
-                <label class="form-label">Megnevezés</label>
+                <input type="hidden" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][is_work]" value="0">
+                <label class="form-label">Megnevezés (Munkaóra <input type="checkbox" class="form-check-input is-work-checkbox" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][is_work]" value="1">)</label>
                 <input type="text" class="form-control" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][item_name]" placeholder="Megnevezés">
+                <select class="form-select worker-selector mt-2" style="display: none" name="WorksheetItem[new][${$('#worksheet-items-container .card').length}][worker_user_id]">
+                    @foreach ($mechanics as $mechanic)
+                        <option value="{{$mechanic->id}}" >{{$mechanic->name}}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-1 col-sm-12">
                 <label class="form-label">Mennyiség</label>
@@ -537,6 +548,7 @@ $('body').on({
         $(this).closest('.card').remove();
     }
 }, '.item-to-trash')
+
 
 </script>
 @endsection

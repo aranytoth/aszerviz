@@ -7,6 +7,7 @@ use App\Models\Worksheet;
 use App\Models\WorksheetItem;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Process\Process;
 use SzamlaAgent\Buyer;
 use SzamlaAgent\Document\Invoice\Invoice;
 use SzamlaAgent\Item\InvoiceItem;
@@ -28,11 +29,15 @@ class Test extends Command
      */
     protected $description = 'Command description';
 
+    public $videoPath;
+    public $videoOptimized;
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        /*
         $model = Worksheet::with('items')->where('id', '01990509-dcc9-709f-bbe5-df9f4aa53788')->first();
 
         //Mail::to('aranytoth.tibor@gmail.com')->send(new MailTest());
@@ -57,7 +62,34 @@ class Test extends Command
             dd($result);
         }
 
+        */
 
+        $this->videoPath = '/var/www/aszerviz.aranytoth.hu/storage/app/public/2025/09/09/BSejJC03UVXyE6ebkPlbyDgoiOgTNP9Iop30KJbq.mp4';
+        $this->videoOptimized = '/var/www/aszerviz.aranytoth.hu/storage/app/public/2025/09/09/BSejJC03UVXyE6ebkPlbyDgoiOgTNP9Iop30KJbq-optimized.mp4';
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $ffmpegPath = 'C:\\ffmpeg\\ffmpeg.exe'; // Windows elérési út
+        } else {
+            $ffmpegPath = 'ffmpeg'; // Linux/Mac elérési út
+        }
+        /*$videoOutputPath = str_replace('.mp4', '_optimized.mp4', $this->videoPath);
+        
+
+        $process = new Process([
+            $ffmpegPath,
+            '-i', $this->videoPath,
+            '-vf', 'scale=1280:720',
+            '-c:v', 'libx265',
+            '-crf', '28',
+            '-c:a', 'aac',
+            $videoOutputPath
+        ]);
+
+        $process->setTimeout(200);
+        $result = $process->run();
+        */
+
+        $cmd = "{$ffmpegPath} -i {$this->videoPath} -vf scale=1280:720 -c:v libx265 -crf 28 -c:a aac {$this->videoOptimized}";
+        shell_exec($cmd);
         
     }
 }

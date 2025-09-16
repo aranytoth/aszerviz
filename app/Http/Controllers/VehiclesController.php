@@ -16,6 +16,24 @@ class VehiclesController extends Controller
 
     public function view(Vehicle $vehicle)
     {
+        $vehicle->load('worksheets');
         return view('vehicle.view', compact('vehicle'));
+    }
+
+    public function search(Request $request)
+    {
+        $params = $request->all();
+        if($params['term']){
+            $model = Vehicle::where('license_plate', 'like', '%'.$params['term'].'%')->get();
+            
+            foreach($model as $key => $vehicle){
+                $model[$key]->text = $vehicle->license_plate;
+            }
+            $response = [
+                'results' => $model
+            ];
+
+            return response()->json($response);
+        }
     }
 }

@@ -37,11 +37,16 @@ class Worksheet extends Model
         'history' => 'array'
     ];
 
+    const STATUS_OPEN = 1;
+    const STATUS_PROGRESS = 2;
+    const STATUS_CLOSED = 10;
+    const STATUS_DELETED = 11;
+
     public static $statuses = [
-        1 => 'Nyitott',
-        2 => 'Folyamatban',
-        10 => 'Lezárt',
-        11 => 'Törölve'
+        self::STATUS_OPEN => 'Nyitott',
+        self::STATUS_PROGRESS => 'Folyamatban',
+        self::STATUS_CLOSED => 'Lezárt',
+        self::STATUS_DELETED => 'Törölve'
     ];
 
     public function client() : HasOne
@@ -89,6 +94,11 @@ class Worksheet extends Model
     public function getCurrentStatusAttribute()
     {
         return self::$statuses[$this->status];
+    }
+
+    public function getIsClosedAttribute()
+    {
+        return $this->status == self::STATUS_CLOSED;
     }
 
     public function getTotalNettoAttribute()

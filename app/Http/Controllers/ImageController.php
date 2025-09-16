@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Enums\ImageDriver;
 use Spatie\Image\Image;
 use Symfony\Component\Process\Process;
+use App\Jobs\OptimizeVideo;
 
 class ImageController extends Controller
 {
@@ -48,13 +49,15 @@ class ImageController extends Controller
 
     public function optimizeVideo($inputPath, $path)
     {
-        $videoOutputPath = str_replace('.mp4', '_optimized.mp4', $inputPath);
-        $imageOutputPath = str_replace('.mp4', '.jpg', $inputPath);
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+
+         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $ffmpegPath = 'C:\\ffmpeg\\ffmpeg.exe'; // Windows elérési út
-        } else {
-            $ffmpegPath = 'ffmpeg'; // Linux/Mac elérési út
-        }
+            } else {
+                $ffmpegPath = 'ffmpeg'; // Linux/Mac elérési út
+            }
+        $imageOutputPath = str_replace('.mp4', '.jpg', $inputPath);
+        /*$videoOutputPath = str_replace('.mp4', '_optimized.mp4', $inputPath);
+        
 
         $process = new Process([
             $ffmpegPath,
@@ -67,9 +70,7 @@ class ImageController extends Controller
         ]);
 
         $process->setTimeout(60);
-        $process->run();
-
-        
+        $process->run();*/
 
         $process2 = new Process([
             $ffmpegPath,
@@ -82,7 +83,7 @@ class ImageController extends Controller
 
         $process2->setTimeout(60);
         $process2->run();
-        Storage::disk('public')->delete($path);
+        //Storage::disk('public')->delete($path);
 
         //$cmd = "C://ffmpeg.exe -i {$inputPath} -vf scale=1280:720 -c:v libx265 -crf 28 -c:a aac {$videoOutputPath}";
         //$cmd2 = "C://ffmpeg.exe -i {$inputPath} -vf \"select=eq(n\,0)\" -q:v 2 -frames:v 1 {$imageOutputPath}";

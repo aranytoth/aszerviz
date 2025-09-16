@@ -60,6 +60,8 @@ class WorksheetController extends Controller
 
         } else {
             $client = Client::where('id', $params['Client']['id'])->first();
+            $client->fill($params['Client']);
+            $client->save();
         }
 
         // Gépjármű létrehozása
@@ -73,7 +75,9 @@ class WorksheetController extends Controller
                 dd($vehicle->getErrors());
             }
         } else {
-            $cient = Vehicle::where('id', $params['Vehicle']['id'])->first();
+            $vehicle = Vehicle::where('id', $params['Vehicle']['id'])->first();
+            $vehicle->fill($params['Vehicle']);
+            $vehicle->save();
         }
         
         // Munkalap létrehozása

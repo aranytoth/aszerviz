@@ -4,7 +4,7 @@
         <div class="dz-image">
             @if ($item->has_video == 'true')
             <video width="200" controls="controls" preload="metadata">
-                <source src="{{str_replace('.jpg', '_optimized.mp4', $item->image)}}" type="video/mp4">
+                <source src="{{str_replace('.jpg', '.mp4', $item->image)}}" type="video/mp4">
             </video>
             @else
                 <img data-dz-thumbnail src="{{$item->image}}" />
