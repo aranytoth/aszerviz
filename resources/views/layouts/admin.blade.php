@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/static/css/app.min.css" />
     <link rel="stylesheet" href="/static/css/icons.min.css" />
+    @yield('css')
 </head>
 <body>
     <div id="layout-wrapper">

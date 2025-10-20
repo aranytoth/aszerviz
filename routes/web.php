@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
@@ -8,7 +9,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehiclesController;
 use App\Http\Controllers\WorksheetController;
-use App\Models\Worksheet;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,6 +27,11 @@ Route::post('image/upload', [ImageController::class, 'upload'])->name('image.upl
 
 Route::group(['middleware' => ['auth:web']], function(){
     Route::get('/', [WorksheetController::class, 'index'])->name('worksheet');
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::post('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
+    Route::post('/calendar/event', [CalendarController::class, 'store'])->name('calendar.create');
+    Route::put('/calendar/event', [CalendarController::class, 'update'])->name('calendar.update');
+    Route::delete('/calendar/event', [CalendarController::class, 'delete'])->name('calendar.delete');
     Route::get('/profil', [UserController::class, 'profil'])->name('user.profil');
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('users/new', [UserController::class, 'create'])->name('users.create');
