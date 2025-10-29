@@ -8,31 +8,25 @@
                     <ul class="metismenu list-unstyled" id="side-menu">
                         <li class="menu-title">Menu</li>
 
+                        
+
+                        <li class="menu-title">CMS</li>
                         <li>
-                            <a href="{{route('dashboard.index')}}" class="waves-effect">
-                                <i class="dripicons-home"></i>
-                                <span>Műszerfal</span>
+                            <a href="{{route('pages.index')}}" class="waves-effect">
+                                <i class="dripicons-document"></i>
+                                <span>{{ trans_db('menu.pages') }}</span>
                             </a>
                         </li>
-
                         <li>
-                            <a href="{{route('worksheet.index')}}" class=" waves-effect">
-                                <i class="dripicons-calendar"></i>
-                                <span>Munkalapok</span>
+                            <a href="{{route('categories.index')}}" class="waves-effect">
+                                <i class="dripicons-list"></i>
+                                <span>{{ trans_db('menu.categories') }}</span>
                             </a>
                         </li>
-
-                        <li>
-                            <a href="{{route('client.index')}}" class="waves-effect">
-                                <i class="dripicons-user-group"></i>
-                                <span>Ügyfelek</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{{route('vehicle.index')}}" class=" waves-effect">
-                                <i class="dripicons-rocket"></i>
-                                <span>Gépjárművek</span>
+                       <li>
+                            <a href="{{route('post.index')}}" class="waves-effect">
+                                <i class="dripicons-document"></i>
+                                <span>{{ trans_db('menu.posts') }}</span>
                             </a>
                         </li>
 
@@ -41,19 +35,13 @@
                         <li>
                             <a href="{{route('users.index')}}" class=" waves-effect">
                                 <i class="dripicons-user"></i>
-                                <span>Felhasználók</span>
+                                <span>{{ trans_db('menu.users') }}</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="{{route('company.index')}}" class=" waves-effect">
-                                <i class="dripicons-scale"></i>
-                                <span>Cégbeállítások</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{route('garage.index')}}" class=" waves-effect">
-                                <i class="dripicons-store"></i>
-                                <span>Garázsok</span>
+                         <li>
+                            <a href="{{route('translations.index')}}" class="waves-effect">
+                                <i class="dripicons-conversation"></i>
+                                <span>{{ trans_db('menu.translations') }}</span>
                             </a>
                         </li>
                         @endrole

@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('translations', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique(); // pl. 'read_more'
-            $table->string('group')->default('common'); // pl. 'navigation', 'buttons'
+            $table->string('group')->default('common'); // pl. 'posts', 'navigation'
+            $table->string('key'); // pl. 'read_more'
             $table->timestamps();
+            
+            // FONTOS: group + key kombinációja legyen unique!
+            $table->unique(['group', 'key']);
         });
 
         Schema::create('translation_values', function (Blueprint $table) {

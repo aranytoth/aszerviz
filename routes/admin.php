@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GarageController;
 use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\TranslationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VehiclesController;
 use App\Http\Controllers\Admin\WorksheetController;
@@ -63,6 +66,28 @@ Route::post('pages/new', [PageController::class, 'store'])->name('pages.store');
 Route::get('pages/edit/{page}', [PageController::class, 'edit'])->name('pages.edit');
 Route::put('pages/edit/{page}', [PageController::class, 'update'])->name('pages.update');
 Route::delete('pages/delete/{page}', [PageController::class, 'destroy'])->name('pages.delete');
+
+Route::get('post', [PostController::class, 'index'])->name('post.index');
+Route::get('post/new', [PostController::class, 'create'])->name('post.create');
+Route::post('post/new', [PostController::class, 'store'])->name('post.store');
+Route::get('post/edit/{post}', [PostController::class, 'edit'])->name('post.edit');
+Route::put('post/edit/{post}', [PostController::class, 'update'])->name('post.update');
+Route::delete('post/delete/{post}', [PostController::class, 'destroy'])->name('post.delete');
+
+Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('categories/new', [CategoryController::class, 'create'])->name('categories.create');
+Route::post('categories/new', [CategoryController::class, 'store'])->name('categories.store');
+Route::get('categories/edit/{category}', [CategoryController::class, 'edit'])->name('categories.edit');
+Route::put('categories/edit/{category}', [CategoryController::class, 'update'])->name('categories.update');
+Route::delete('categories/delete/{category}', [CategoryController::class, 'destroy'])->name('categories.delete');
+
+Route::get('/translations', [TranslationController::class, 'index'])->name('translations.index');
+Route::get('translations/new', [TranslationController::class, 'create'])->name('translations.create');
+Route::post('translations/new', [TranslationController::class, 'store'])->name('translations.store');
+Route::get('/translations/{translation}', [TranslationController::class, 'edit'])->name('translations.edit');
+Route::put('/translations/{translation}', [TranslationController::class, 'update'])->name('translations.update');
+Route::post('/translations/clear-cache', [TranslationController::class, 'clearCache'])->name('translations.clear-cache');
+
 
 
 ?>
