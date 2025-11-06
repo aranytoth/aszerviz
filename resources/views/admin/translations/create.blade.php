@@ -35,7 +35,7 @@
                 </div>
                 
             </div>
-            <button type="submit" class="btn btn-success mt-4">Létrehoz</button>
+            <button type="submit" class="btn btn-success mt-4">{{trans_db('common.create')}}</button>
         </form>
     </div>
 </div>

@@ -23,12 +23,19 @@
                                 <span>{{ trans_db('menu.categories') }}</span>
                             </a>
                         </li>
-                       <li>
+                        <li>
+                            <a href="{{route('tags.index')}}" class="waves-effect">
+                                <i class="dripicons-document"></i>
+                                <span>{{ trans_db('menu.tags') }}</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{route('post.index')}}" class="waves-effect">
                                 <i class="dripicons-document"></i>
                                 <span>{{ trans_db('menu.posts') }}</span>
                             </a>
                         </li>
+                       
 
                         @role('admin|manager')
                         <li class="menu-title">Admin</li>

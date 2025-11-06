@@ -95,6 +95,8 @@ return [
     |
     */
 
+    'available_locales' => ['hu', 'en'],
+
     'cipher' => 'AES-256-CBC',
 
     'key' => env('APP_KEY'),

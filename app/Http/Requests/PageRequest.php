@@ -22,8 +22,17 @@ class PageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'status' => 'required'
+            'Page.title' => 'required',
+            'Page.status' => 'required',
+            'Page.content' => 'required_if:Page.status,10'
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'Page.title.required' => 'A cím megadása kötelező.',
+            'Page.content.required_if' => 'Élesített oldalnál tartalom megadása kötelező',
         ];
     }
 }

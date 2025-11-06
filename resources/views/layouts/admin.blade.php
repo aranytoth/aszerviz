@@ -35,7 +35,7 @@
     <script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/static/libs/node-waves/waves.min.js"></script>
     <script src="/static/libs/metismenu/metisMenu.min.js"></script>
-    <script src="/static/js/app.js"></script>
+    @vite(['resources/js/app.js'])
     @yield('js')
 </body>
 </html>

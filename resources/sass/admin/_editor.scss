@@ -1,0 +1,45 @@
+.lang-selector {
+    border-bottom: 1px solid #ddd; 
+    margin-bottom: 12px;
+
+     ul {
+        display: flex; 
+        gap: 5px; 
+        padding: 0; 
+        margin: 0;
+        
+        li {
+            list-style-type: none;  
+        }
+    }
+
+    label {
+        padding: 5px 10px; 
+        margin: 0; 
+        background-color: #ddd; 
+        color: #fff; 
+        line-height: 14px; 
+        font-size: 14px; 
+        cursor: pointer;
+
+        &.selected {
+            background-color: #1d1d1d;
+        }
+    }
+
+    
+}
+
+input[type="radio"].lang-selector-input {
+        display: none;
+
+        & + div.lang-block {
+            display: none;
+        }
+
+        &:checked {
+            & + div.lang-block {
+                display: block;
+            } 
+        }
+    }

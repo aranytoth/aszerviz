@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PageType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PageRequest;
+use App\Models\Category;
 use App\Models\Page;
+use App\Models\PageCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
@@ -18,19 +21,51 @@ class PageController extends Controller
 
     public function create()
     {
-        return view('admin.page.create');
+        $categories = Category::all();
+        return view('admin.page.create', compact('categories'));
     }
 
     public function store(PageRequest $request)
     {
         $params = $request->all();
-        dd($params);
+        $page = new Page();
+        $page->fill($params['Page']);
+        $page->type = PageType::Page->value;
+        $page->slug = Str::slug($params['Page']['title']);
+
+        if($page->save()){
+            $pageCategory = new PageCategory();
+            $pageCategory->category_id = $params['PageCategory'];
+            if($page->pageCategory()->save($pageCategory)){
+                return redirect(route('pages.index'));
+            }
+        } else {
+            dd('hiba');
+        }
+
         
     }
 
-    public function edit()
+    public function edit(Page $page)
     {
-        return view('admin.page.edit');
+        $categories = Category::all();
+        return view('admin.page.edit', compact('page', 'categories'));
+    }
+
+     public function update(Request $request, Page $page)
+    {
+        $params = $request->all();
+        
+        
+        $page->fill($params['Page']);
+       
+        if($page->save()){
+            $page->pageCategory->category_id = $params['PageCategory'];
+            $page->pageCategory->save();
+
+            return redirect(route('pages.index'));
+
+        }
     }
 
     public function view()
@@ -45,8 +80,5 @@ class PageController extends Controller
 
     
 
-    public function update(Request $request)
-    {
-        // Handle updating an existing page
-    }
+   
 }

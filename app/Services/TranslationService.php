@@ -157,6 +157,6 @@ class TranslationService
      */
     public function getAllGroups(): array
     {
-        return Translation::distinct()->pluck('group')->toArray();
+        return config('site.translation.groups');
     }
 }

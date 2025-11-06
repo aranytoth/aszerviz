@@ -40,27 +40,38 @@
                     <div class="col-md-6">
                         <h4 class="mb-4">Új oldal</h4>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" name="title" placeholder="Cím hozzáadása" value="{{old('title')}}">
-                                @error('title')
-                                    <div class="invalid-feedback d-block">{{$message}}</div>
-                                @enderror
+                    <div class="lang-selector">
+                        <ul>
+                            @foreach (config('app.available_locales', ['hu', 'en']) as $key => $lang)
+                                <li><label for="lang-{{$lang}}" class="{{$key == 0 ? 'selected' : ''}}">{{strtoupper($lang)}}</label></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @foreach (config('app.available_locales', ['hu', 'en']) as $key => $lang)
+                    <input type="radio" name="lang-selector" class="lang-selector-input" id="lang-{{$lang}}" {{$key == 0 ? 'checked' : ''}}>
+                    <div class="lang-block">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" name="Page[title][{{$lang}}]" placeholder="Cím hozzáadása" value="{{old('Page.title.'.$lang)}}">
+                                    @error('Page.title')
+                                        <div class="invalid-feedback d-block">{{$message}}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <textarea placeholder="Lead" name="Page[lead][{{$lang}}]" class="form-control">{{old('Page.lead.'.$lang)}}</textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <textarea placeholder="Lead" name="lead" class="form-control">{{old('lead')}}</textarea>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <textarea name="Page[content][{{$lang}}]" id="editor">{{old('Page.content'.$lang)}}</textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="editor">{{old('content')}}</div>
-                        </div>
-                    </div>
-                    
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -74,7 +85,7 @@
                 ssdf
             </div>
             <div class="card-footer text-muted d-flex justify-content-between">
-                <button type="submit" name="status" value="2" class="btn btn-sm btn-success">Közzététel</button><button type="submit" name="status" value="1" class="btn btn-sm">Piszkozat mentése</button>
+                <button type="submit" name="Page[status]" value="10" class="btn btn-sm btn-success">Közzététel</button><button type="submit" name="Page[status]" value="1" class="btn btn-sm">Piszkozat mentése</button>
             </div>
         </div>
 
@@ -83,7 +94,12 @@
                 Kategória
             </div>
             <div class="card-body">
-                ssdf
+                <select name="PageCategory" class="form-select">
+                    <option value="0">Nincs kategória</option>
+                    @foreach ($categories as $cat)
+                        <option value="{{$cat->id}}">{{$cat->name}}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
     </div>

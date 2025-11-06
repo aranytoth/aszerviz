@@ -1,19 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\CalendarController;
-use App\Http\Controllers\Admin\ClientsController;
-use App\Http\Controllers\Admin\CompanyController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\GarageController;
 use App\Http\Controllers\Admin\ImageController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\VehiclesController;
 use App\Http\Controllers\Admin\WorksheetController;
+use App\Http\Controllers\Public\SiteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
 Auth::routes(['register' => false]);
+
+Route::get('/',[SiteController::class, 'index'])->name('public.home');
 
 Route::get('/home', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
 

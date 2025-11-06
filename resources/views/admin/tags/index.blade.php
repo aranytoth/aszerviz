@@ -5,11 +5,11 @@
     <div class="card-body">
         <div class="row align-items-center mb-3">
             <div class="col-md-6">
-                <h4 class="mb-0">Oldalak</h4>
+                <h4 class="mb-0">Címkék</h4>
             </div>
             <div class="col-md-6">
                 <div class="float-end d-none d-sm-block">
-                    <a href="{{route('pages.create')}}" class="btn btn-success">Új oldal</a>
+                    <a href="{{route('tags.create')}}" class="btn btn-success">Új címke</a>
                 </div>
             </div>
         </div>
@@ -20,20 +20,17 @@
                     <tr>
                         <th>#</th>
                         <th>Cím</th>
-                        <th>Tulajdonos</th>
-                        <th>Státusz</th>
+                        <th>Slug</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($pages as $key => $page)
+                    @foreach ($model as $key => $tag)
                     <tr>
                         <th scope="row">{{$key+1}}</th>
-                        <td>{{$page->title}}</td>
-                        
-                        <td>{{$page->created_at}}</td>
-                        <td>{{$page->currentStatus}}</td>
-                        <td><a href="{{route('pages.edit', ['page' => $page->id])}}"><span class="dripicons-pencil"></span></a></td>
+                        <td>{{$category->name}}</td>
+                        <td>{{$category->slug}}</td>
+                        <td><a href="{{route('categories.edit', ['category' => $category->id])}}"><span class="dripicons-pencil"></span></a></td>
                     </tr>
                     @endforeach
                 </tbody>

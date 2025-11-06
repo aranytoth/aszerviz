@@ -27,7 +27,7 @@ class CategoryController extends Controller
 
         $category = new Category();
         $category->name = $params['name'];
-        $category->slug = !empty($params['slug']) ? Str::slug($params['slug']) : Str::slug($params['name']);
+        $category->slug = !empty($params['slug']) ? Str::slug($params['slug']) : Str::slug($category->name);
         $category->parent_id = $params['parent_id'];
 
         if($category->save()){
@@ -35,14 +35,19 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit()
+    public function edit(Category $category)
     {
-        return view('admin.category.edit');
+        $categories = Category::where('id','<>', $category->id)->orderBy('id', 'desc')->get();
+        return view('admin.category.edit', compact('category', 'categories'));
     }
 
-    public function update()
+    public function update(Request $request, Category $category)
     {
-
+        $params = $request->all();
+        $category->fill($params);
+        if($category->save()){
+            return redirect(route('categories.edit', ['category' => $category->id]));
+        }
     }
 
     public function view()
@@ -50,7 +55,7 @@ class CategoryController extends Controller
 
     }
 
-    public function delete()
+    public function destroy()
     {
 
     }
