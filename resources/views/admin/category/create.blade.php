@@ -27,7 +27,7 @@
                             <input type="text" name="name[{{$lang}}]" class="form-control" value="{{old('name')}}">
                         </div>
                     </div>
-                    @endforeach
+                @endforeach
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label class="form-label">Keresőbarát név</label>
