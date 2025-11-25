@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             
-            $table->text('lead')->nullable()->after('title');
-            $table->string('slug')->unique()->after('lead');
-            $table->text('content')->nullable()->after('slug');
-            $table->string('lead_image')->nullable()->after('content');
+            $table->text('lead')->nullable();
+            $table->string('slug')->unique();
+            $table->text('content')->nullable();
+            $table->string('lead_image')->nullable();
             $table->integer('order')->default(0);
-            $table->integer('parent_id')->nullable()->after('order');
-            $table->integer('status')->default(1)->after('parent_id');
-            $table->integer('type')->default(0)->after('status');
-            $table->json('additional')->nullable()->after('lead_image');
+            $table->integer('parent_id')->nullable();
+            $table->integer('status')->default(1);
+            $table->integer('type')->default(0);
+            $table->json('additional')->nullable();
             $table->timestamps();
         });
     }

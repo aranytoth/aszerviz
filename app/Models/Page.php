@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Enums\PageType;
 use App\Enums\PageStatus;
 use App\Traits\SearchableInAllLocales;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
 use Laravel\Scout\Searchable;
 
@@ -40,12 +45,12 @@ class Page extends Model
     ];
 
    
-    public function pageCategory()
+    public function pageCategory() : HasOne
     {
         return $this->hasOne(PageCategory::class, 'page_id', 'id');
     }
 
-    public function category()
+    public function category() : HasOneThrough
     {
         return $this->hasOneThrough(
             Category::class, 
@@ -57,7 +62,7 @@ class Page extends Model
         );
     }
 
-    public function getCurrentStatusAttribute()
+    public function getCurrentStatusAttribute() : string
     {
         return $this->status?->label() ?? 'unknown';
     }
@@ -78,8 +83,50 @@ class Page extends Model
         ];
     }
 
-    public function searchableAs()
+    public function tags() : HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Tag::class,
+            PageTag::class,
+            'page_id',
+            'id',
+            'id',
+            'tag_id');
+    }
+
+    public function pageTags() : HasMany
+    {
+        return $this->hasMany(PageTag::class, 'page_id', 'id');
+    }
+
+    public function searchableAs() : string
     {
         return 'posts_' . app()->getLocale();
     }
+
+    public function updateTags($tagParams)
+    {
+        
+        $this->pageTags()->delete();
+        if($tagParams && count($tagParams) > 0){
+                foreach($tagParams as $key => $tag){
+                    $pageTag = new PageTag();
+                    $pageTag->page_id = $this->id;
+                    if(is_numeric($tag)){
+                        $pageTag->tag_id = intval($tag);
+                    } else {
+                        $newTag = new Tag();
+                        $newTag->name = intval($tag);
+                        $newTag->slug = Str::slug($tag);
+                        if($newTag->save()){
+                            $pageTag->tag_id = $newTag->id;
+                        }
+                    }
+                    $pageTag->save();
+                    
+                }
+            }
+    }
+
+    
 }

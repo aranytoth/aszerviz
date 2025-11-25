@@ -33,7 +33,7 @@
                         
                         <td>{{$page->created_at}}</td>
                         <td>{{$page->currentStatus}}</td>
-                        <td><a href="{{route('post.edit', ['post' => $page->id])}}"><span class="dripicons-pencil"></span></a></td>
+                        <td><a href="{{route('post.edit', ['page' => $page->id])}}"><span class="dripicons-pencil"></span></a></td>
                     </tr>
                     @endforeach
                 </tbody>

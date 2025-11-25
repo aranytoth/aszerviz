@@ -31,7 +31,7 @@ class PageController extends Controller
         $page = new Page();
         $page->fill($params['Page']);
         $page->type = PageType::Page->value;
-        $page->slug = Str::slug($params['Page']['title']);
+        $page->slug = Str::slug($params['Page']['title']['hu']);
 
         if($page->save()){
             $pageCategory = new PageCategory();
@@ -42,8 +42,6 @@ class PageController extends Controller
         } else {
             dd('hiba');
         }
-
-        
     }
 
     public function edit(Page $page)
@@ -55,7 +53,6 @@ class PageController extends Controller
      public function update(Request $request, Page $page)
     {
         $params = $request->all();
-        
         
         $page->fill($params['Page']);
        

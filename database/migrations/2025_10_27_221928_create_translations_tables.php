@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('content');
             $table->timestamps();
 
-            $table->unique(['post_id', 'lang']);
+            $table->unique(['page_id', 'lang']);
         });
 
         Schema::create('tags_translations', function (Blueprint $table) {

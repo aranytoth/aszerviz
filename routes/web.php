@@ -7,6 +7,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('storage/{folder_id}/{dimensions}/{filename}', [ImageController::class, 'resize'])
+    ->where([
+        'folder_id'  => '[0-9]+',          // Pl: 52513 (csak számok)
+        'dimensions' => '\d+x\d+',         // Pl: 310x440 (szám, x, szám)
+        'filename'   => '.*'               // Bármilyen fájlnév (kiterjesztéssel együtt)
+    ])
+    ->name('image.resize');
+
+
 Auth::routes(['register' => false]);
 
 Route::get('/',[SiteController::class, 'index'])->name('public.home');
@@ -25,5 +34,7 @@ Route::group(['middleware' => ['auth:web']], function(){
     Route::prefix('admin')->group(function () {
         
     });
+
+
 });
 

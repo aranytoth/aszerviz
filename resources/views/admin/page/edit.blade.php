@@ -93,7 +93,6 @@
                     <button type="submit" name="Page[status]" value="10" class="btn btn-sm btn-success">Mentés</button>
                     <button type="submit" name="Page[status]" value="1" class="btn btn-sm">Átállítás vázlatra</button>
                 @endif
-                
             </div>
         </div>
 

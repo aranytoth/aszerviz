@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\Translatable\HasTranslations;
 
 class Tag extends Model
@@ -18,14 +19,14 @@ class Tag extends Model
         'slug'
     ];
 
-    public function posts()
+    public function posts() : HasManyThrough
     {
-        return $this->hasMany(
+        return $this->hasManyThrough(
             Page::class,
             PageTag::class,
-            'page_id',
+            'tag_id',
             'id',
             'id',
-            'tag_id');
+            'page_id');
     }
 }

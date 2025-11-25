@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GarageController;
 use App\Http\Controllers\Admin\ImageController;
+use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
@@ -73,9 +74,9 @@ Route::group(['middleware' => ['auth:web']], function(){
     Route::get('post', [PostController::class, 'index'])->name('post.index');
     Route::get('post/new', [PostController::class, 'create'])->name('post.create');
     Route::post('post/new', [PostController::class, 'store'])->name('post.store');
-    Route::get('post/edit/{post}', [PostController::class, 'edit'])->name('post.edit');
-    Route::put('post/edit/{post}', [PostController::class, 'update'])->name('post.update');
-    Route::delete('post/delete/{post}', [PostController::class, 'destroy'])->name('post.delete');
+    Route::get('post/edit/{page}', [PostController::class, 'edit'])->name('post.edit');
+    Route::put('post/edit/{page}', [PostController::class, 'update'])->name('post.update');
+    Route::delete('post/delete/{page}', [PostController::class, 'destroy'])->name('post.delete');
 
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('categories/new', [CategoryController::class, 'create'])->name('categories.create');
@@ -91,7 +92,16 @@ Route::group(['middleware' => ['auth:web']], function(){
     Route::put('/translations/{translation}', [TranslationController::class, 'update'])->name('translations.update');
     Route::post('/translations/clear-cache', [TranslationController::class, 'clearCache'])->name('translations.clear-cache');
 
-Route::resource('tags', TagController::class);
+     
+    Route::resource('tags', TagController::class);
+
+    Route::get('/media', [MediaController::class, 'index'])->name('media.index');
+    Route::get('/media/{media}', [MediaController::class, 'show'])->name('media.show');
+    Route::get('/media/edit/{media}', [MediaController::class, 'edit'])->name('media.edit');
+    Route::put('/media/{media}', [MediaController::class, 'update'])->name('media.update');
+    Route::post('/media/upload', [MediaController::class, 'store'])->name('media.upload');
+    Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+   
 });
 
 

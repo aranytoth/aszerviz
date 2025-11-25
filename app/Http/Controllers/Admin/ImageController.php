@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Enums\ImageDriver;
 use Spatie\Image\Image;
 use Symfony\Component\Process\Process;
-use App\Jobs\OptimizeVideo;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ImageController extends Controller
 {
@@ -22,6 +23,7 @@ class ImageController extends Controller
         $video = false;
         
         $path = $uploadedFile->store('temp', ['disk' => 'public']);
+
         if($this->str_contains_any($uploadedFile->getMimeType(), ['mp4', 'mov', 'ogg', 'qt', 'webm'])){
            
            $this->optimizeVideo(Storage::disk('public')->path($path), $path);
@@ -91,6 +93,39 @@ class ImageController extends Controller
         //shell_exec($cmd);
         //shell_exec($cmd2);
 
+    }
+
+    /**
+     * Kép átméretezése és cache-elése.
+     * * ARCHITECTURAL DECISION:
+     * Bár a projektben elérhető lehet más képkezelő (pl. Spatie Image),
+     * szándékosan az Intervention Image-et használjuk itt.
+     * * OK: Ez egy dobozos termék, és nem garantálhatjuk, hogy a végfelhasználó
+     * szerverén telepítve van az ImageMagick (amit a Spatie Image v3+ hard dependency-ként kezel jelenleg).
+     * Az Intervention megbízhatóan működik a standard GD könyvtárral is, ami
+     * szinte minden PHP környezetben alapértelmezett.
+     * * @see https://image.intervention.io/
+    */
+    public function resize($folder_id, $dimensions, $filename)
+    {
+        $newDimensions = explode('x',$dimensions);
+        $file = Storage::disk('public')->path($folder_id.'/'.$filename);
+
+        if(!file_exists($file)){
+            abort(404);
+        }
+
+        $manager = new ImageManager(Driver::class);
+        $image = $manager->read($file);
+        $image->cover($newDimensions[0], $newDimensions[1]);
+        Storage::disk('public')->makeDirectory($folder_id.'/'.$dimensions);
+        $image->save(Storage::disk('public')->path($folder_id.'/'.$dimensions.'/'.$filename));
+
+        //$image = Image::load($file)
+        //->fit(fit: Fit::FillMax, desiredWidth:  $newDimensions[0],  desiredHeight: $newDimensions[1])
+        //->save(Storage::disk('public')->path($folder_id.'/'.$dimensions.'/'.$filename));
+
+        return response()->file(Storage::disk('public')->path($folder_id.'/'.$dimensions.'/'.$filename));
     }
 
 }

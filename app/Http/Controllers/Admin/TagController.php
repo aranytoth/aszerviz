@@ -25,7 +25,7 @@ class TagController extends Controller
         $params = $request->all();
         $tag = new Tag();
         $tag->fill($params);
-        $tag->slug = !empty($params['slug']) ? Str::slug($params['slug']) : Str::slug($params['name']);
+        $tag->slug = !empty($params['slug']) ? Str::slug($params['slug']) : Str::slug($params['name']['hu']);
 
         if($tag->save()){
             return redirect(route('tags.index'));
@@ -50,5 +50,23 @@ class TagController extends Controller
     public function destroy()
     {
 
+    }
+
+    public function search(Request $request)
+    {
+        $params = $request->all();
+
+        if(isset($params['q']) && strlen($params['q']) > 2){
+            $model = Tag::where('name', 'like', '%'.$params['q'].'%')->get();
+
+            foreach($model as $key => $tag){
+                $model[$key]->text = $tag->name;
+            }
+            $response = [
+                'results' => $model
+            ];
+
+            return response()->json($response);
+        }
     }
 }

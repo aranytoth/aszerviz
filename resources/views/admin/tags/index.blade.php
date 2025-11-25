@@ -28,9 +28,9 @@
                     @foreach ($model as $key => $tag)
                     <tr>
                         <th scope="row">{{$key+1}}</th>
-                        <td>{{$category->name}}</td>
-                        <td>{{$category->slug}}</td>
-                        <td><a href="{{route('categories.edit', ['category' => $category->id])}}"><span class="dripicons-pencil"></span></a></td>
+                        <td>{{$tag->name}}</td>
+                        <td>{{$tag->slug}}</td>
+                        <td><a href="{{route('tags.edit', ['tag' => $tag->id])}}"><span class="dripicons-pencil"></span></a></td>
                     </tr>
                     @endforeach
                 </tbody>

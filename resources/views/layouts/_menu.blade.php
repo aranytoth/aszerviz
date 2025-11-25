@@ -35,6 +35,12 @@
                                 <span>{{ trans_db('menu.posts') }}</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{route('media.index')}}" class="waves-effect">
+                                <i class="dripicons-list"></i>
+                                <span>{{ trans_db('menu.gallery') }}</span>
+                            </a>
+                        </li>
                        
 
                         @role('admin|manager')

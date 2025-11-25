@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\ClientsController;
-use App\Http\Controllers\VehiclesController;
+use App\Http\Controllers\Admin\ClientsController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\VehiclesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +14,9 @@ Route::get('/user', function (Request $request) {
 Route::prefix('/v1')->group(function(){
     Route::get('/search/vehicle', [VehiclesController::class, 'search'])->name('api.search.vehicle');
     Route::get('/search/client', [ClientsController::class, 'search'])->name('api.search.client');
+    Route::get('tags/search', [TagController::class, 'search'])->name('api.search.tag');
+
+    Route::get('gallery/images', [MediaController::class, 'images'])->name('api.gallery.images');
 });
 
 

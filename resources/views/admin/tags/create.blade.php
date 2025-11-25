@@ -17,7 +17,7 @@
                         @endforeach
                     </ul>
                 </div>
-                <form action="{{route('categories.store')}}" method="POST">
+                <form action="{{route('tags.store')}}" method="POST">
                     @csrf
                 @foreach (config('app.available_locales', ['hu', 'en']) as $key => $lang)
                     <input type="radio" name="lang-selector" class="lang-selector-input" id="lang-{{$lang}}" {{$key == 0 ? 'checked' : ''}}>
