@@ -15,12 +15,14 @@ use App\Http\Controllers\Admin\TranslationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VehiclesController;
 use App\Http\Controllers\Admin\WorksheetController;
+use App\Livewire\Admin\MainPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
 Route::group(['middleware' => ['auth:web']], function(){
     Route::get('/', [DashboardController::class, 'index'])->name('admin.home');
+    Route::get('/mainpage', MainPage::class)->name('admin.mainpage');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
     Route::post('/calendar/event', [CalendarController::class, 'store'])->name('calendar.create');

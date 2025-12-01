@@ -8,6 +8,7 @@ enum PageStatus: int
     case Visible = 10;
     case Hidden = 3;
     case Archive = 4;
+    case Revision = 5;
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum PageStatus: int
             self::Visible => 'Publikus',
             self::Hidden => 'Rejtett',
             self::Archive => 'Archivált',
+            self::Revision => 'Revízió',
         };
     }
 }

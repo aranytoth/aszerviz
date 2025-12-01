@@ -5,6 +5,7 @@ return [
         'groups' => [
             'common',
             'menu',
+            'site'
         ]
     ]
 ];
