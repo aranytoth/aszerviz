@@ -15,14 +15,13 @@ class Blank extends Component
         return view('livewire.admin.components.blank');
     }
 
-    public function updatedLayout($value)
-    {
-        $this->data['layout'] = $this->layout;
-        $this->dispatch('changeLayout', key: $this->key, data: $this->data);
-    }
-
     public function addElement()
     {
         $this->data['data'][] = [''];
+    }
+
+    public function updated($property)
+    {
+        $this->dispatch('changeLayout', key: $this->key, data: $this->data);
     }
 }

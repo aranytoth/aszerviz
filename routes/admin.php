@@ -7,9 +7,11 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GarageController;
 use App\Http\Controllers\Admin\ImageController;
+use App\Http\Controllers\Admin\MainPageController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\TranslationController;
 use App\Http\Controllers\Admin\UserController;
@@ -20,9 +22,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['middleware' => ['auth:web']], function(){
+Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.home');
     Route::get('/mainpage', MainPage::class)->name('admin.mainpage');
+    Route::get('/mainpage/test', [MainPageController::class, 'index'])->name('admin.mainpage.test');
+    Route::get('settings', [SettingsController::class, 'index'])->name('admin.settings');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
     Route::post('/calendar/event', [CalendarController::class, 'store'])->name('calendar.create');
@@ -94,7 +98,7 @@ Route::group(['middleware' => ['auth:web']], function(){
     Route::put('/translations/{translation}', [TranslationController::class, 'update'])->name('translations.update');
     Route::post('/translations/clear-cache', [TranslationController::class, 'clearCache'])->name('translations.clear-cache');
 
-     
+
     Route::resource('tags', TagController::class);
 
     Route::get('/media', [MediaController::class, 'index'])->name('media.index');
@@ -103,7 +107,7 @@ Route::group(['middleware' => ['auth:web']], function(){
     Route::put('/media/{media}', [MediaController::class, 'update'])->name('media.update');
     Route::post('/media/upload', [MediaController::class, 'store'])->name('media.upload');
     Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
-   
+
 });
 
 
