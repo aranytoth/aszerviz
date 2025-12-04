@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/mainpage', MainPage::class)->name('admin.mainpage');
     Route::get('/mainpage/test', [MainPageController::class, 'index'])->name('admin.mainpage.test');
     Route::get('settings', [SettingsController::class, 'index'])->name('admin.settings');
+    Route::post('settings', [SettingsController::class, 'store'])->name('admin.settings.store');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
     Route::post('/calendar/event', [CalendarController::class, 'store'])->name('calendar.create');

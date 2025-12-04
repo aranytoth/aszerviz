@@ -13,7 +13,7 @@ if (!function_exists('trans_db')) {
 if (!function_exists('get_option')) {
     function get_option(string $key, mixed $default = null): mixed
     {
-        return Settings::get($key, $default);
+        return Settings::get($key) ?? $default;
     }
 }
 

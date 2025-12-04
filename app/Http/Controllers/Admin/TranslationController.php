@@ -68,18 +68,18 @@ class TranslationController extends Controller
     
     public function update(Request $request, string $locale, string $group = 'common')
     {
+        
         $validated = $request->validate([
-            'translations' => 'required|array',
-            'translations.*' => 'nullable|string|max:1000'
+            'Translation' => 'required|array',
+            'Translation.*' => 'nullable|string|max:1000'
         ]);
         
         $this->translationService->updateTranslations(
-            $validated['translations'],
-            $locale,
-            $group
+            $validated['Translation'],
+            $request['TranslationValues']
         );
         
-        return back()->with('success', "Fordítások frissítve: {$group}");
+        return redirect(route('translations.index'));
     }
     
     public function clearCache()

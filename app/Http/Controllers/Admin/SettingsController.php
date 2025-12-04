@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Settings;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -20,11 +21,19 @@ class SettingsController extends Controller
 
     public function store(Request $request)
     {
+        $params = $request->all();
+        
+        foreach($params as $key => $value){
+            if (!in_array($key, Settings::$defaultSettings) || empty($value)) {
+                continue;
+        }
+    
+            Settings::updateOrCreate(
+                ['name' => $key],
+                ['value' => $value]
+            );
+        }
 
-    }
-
-    public function update(Request $request)
-    {
-
+        return back()->with('success', 'Beálítások módosítva');
     }
 }

@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Models\Translation;
+use App\Models\TranslationValue;
 use Illuminate\Support\Facades\Cache;
 
 class TranslationService
@@ -119,21 +120,23 @@ class TranslationService
     /**
      * Fordítások frissítése
      */
-    public function updateTranslations(array $translations, string $locale, string $group = 'common'): void
+    public function updateTranslations(array $translation, array $translationValues): void
     {
-        foreach ($translations as $key => $value) {
-            $translation = Translation::firstOrCreate([
-                'group' => $group,
-                'key' => $key
+            $getTranslation = Translation::firstOrCreate([
+                'group' => $translation['group'],
+                'key' => $translation['key']
             ]);
-            
-            $translation->values()->updateOrCreate(
-                ['lang' => $locale],
-                ['value' => $value]
-            );
-        }
+
         
-        $this->clearCache($locale);
+            foreach($translationValues as $key => $value){
+                $getTranslation->values()->updateOrCreate(
+                    ['lang' => $key],
+                    ['value' => $value]
+                );
+                $this->clearCache($key);
+            }
+            
+        
     }
     
     /**

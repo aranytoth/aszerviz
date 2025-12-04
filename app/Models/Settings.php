@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\Cache;
 
 class Settings extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
         'value'
     ];
 
-    private static $defaultSettings = [
+    public static $defaultSettings = [
         'site_name',
         'site_description',
         'site_keywords',
@@ -21,7 +23,8 @@ class Settings extends Model
         'default_date_format',
         'default_time_format',
         'default_admin_email',
-        '',
+        'default_admin_url',
+        'default_admin_login'
     ];
 
     protected $casts = [
@@ -35,16 +38,17 @@ class Settings extends Model
         });
     }
 
-    public static function get(string $key, mixed $default = null): mixed
+    public static function get(string $key): mixed
     {
-        return Cache::rememberForever("settings.{$key}", function () use ($key, $default) {
-            return self::where('name', $key)->value('value') ?? $default;
+        return Cache::rememberForever("settings.{$key}", function () use ($key) {
+
+            return self::where('name', $key)->value('value');
         });
     }
 
     public static function set(string $key, mixed $value): mixed
     {
-        if (!in_array($key, self::$defaultSettings)) {
+        if (in_array($key, self::$defaultSettings)) {
             return false;
         }
 

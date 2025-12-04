@@ -8,6 +8,11 @@ class Translation extends Model
 {
 
     protected $table = 'translations';
+
+    protected $fillable = [
+        'group',
+        'key'
+    ];
     
     public function values()
     {
