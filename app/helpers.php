@@ -13,6 +13,9 @@ if (!function_exists('trans_db')) {
 if (!function_exists('get_option')) {
     function get_option(string $key, mixed $default = null): mixed
     {
+        if(env('DISABLE_SETTINGS', false)) {
+            return $default;
+        }
         return Settings::get($key) ?? $default;
     }
 }
